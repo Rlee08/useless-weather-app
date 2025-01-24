@@ -10,8 +10,10 @@ const HomePage = () => {
   useEffect(() => {
     const getWeather = async () => {
       try {
-        const location = await getUserLocation();
-        const forecast = await fetchWeatherData(location);
+        const {lat,long} = await getUserLocation();
+        console.log(lat);
+        console.log('fetchingweatherdata');
+        const forecast = await fetchWeatherData(lat,long);
         setDescription(forecast);
       } catch (error) {
         setDescription('Unable to fetch weather data');
