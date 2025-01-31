@@ -1,42 +1,47 @@
 "use client"
 
 import React, {useState, useEffect} from 'react';
+import P5Wrapper from 'react-p5-wrapper';
 import {fetchAdjectives, getUserLocation} from '../components/weatherFetcher.js';
-import {fetchSynonym} from '../components/synonymFetcher.js'
+import {fetchSynonym} from '../components/synonymFetcher.js';
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls';
+import SceneInit from '../components/sceneInit.js';
 
-const HomePage = () => {
+
+const App = () => {
 
   const [description, setDescription] = useState(null);
 
-  useEffect(() => {
-    const getWeather = async () => {
-      try {
-        const {lat,lon} = await getUserLocation();
-        console.log(lat);
-        console.log('fetchingweatherdata');
-        //get list of all adjectives from weather forecast
-        const adjectiveList = await fetchAdjectives(lat,lon);
+  // useEffect(() => {
+  //   const getWeather = async () => {
+  //     try {
+  //       const {lat,lon} = await getUserLocation();
+  //       console.log(lat);
+  //       console.log('fetchingweatherdata');
+  //       //get list of all adjectives from weather forecast
+  //       const adjectiveList = await fetchAdjectives(lat,lon);
 
-        console.log('got adjective list', adjectiveList);
+  //       console.log('got adjective list', adjectiveList);
 
-        //list of synonyms from fetchSynonym function
-        const synonymList = await fetchSynonym(adjectiveList);
+  //       //list of synonyms from fetchSynonym function
+  //       const synonymList = await fetchSynonym(adjectiveList);
 
-        //add list of synonyms to the original list of adjectives
-        const synonymCollection = adjectiveList.concat(synonymList);
+  //       //add list of synonyms to the original list of adjectives
+  //       const synonymCollection = adjectiveList.concat(synonymList);
 
-        console.log(synonymCollection);
-        // loopSynonyms(synonymCollection);
+  //       console.log(synonymCollection);
+  //       // loopSynonyms(synonymCollection);
 
-        setDescription('hi');
-      } catch (error) {
-        setDescription('Unable to fetch weather data');
-        throw error;
-      }
-    };
+  //       setDescription('hi');
+  //     } catch (error) {
+  //       setDescription('Unable to fetch weather data');
+  //       throw error;
+  //     }
+  //   };
 
-    getWeather();
-  }, []);
+  //   getWeather();
+  // }, []);
 
   // function waitforme(millisec) {
   //     return new Promise(resolve => {
@@ -76,13 +81,25 @@ const HomePage = () => {
   //     return;
   //   }
 
+  useEffect(() => {
+    const sky = new SceneInit('threeJsCanvas');
+    sky.initialize();
+    sky.animate();
+
+    const boxGeometry = new THREE.BoxGeometry(16,16,16);
+    const boxMaterial = new THREE.MeshNormalMaterial();
+    const boxMesh = new THREE.Mesh(boxGeometry,boxMaterial);
+    sky.scene.add(boxMesh);
+
+  },[]);
       
   return(
-    <div className="flex flex-col justify-center items-center w-full h-screen gap-4 text-center">
-      <h1 className="text-4xl">What's the weather today?</h1>
-      <h1 id="weather" className="text-4xl max-w-lg">{description || 'Loading...'}</h1>
+    <div>
+      {/* <h1 className="text-4xl">What's the weather today?</h1>
+      <h1 id="weather" className="text-4xl max-w-lg">{description || 'Loading...'}</h1> */}
+      <canvas id="threeJsCanvas"/>
     </div>
   )
 }
 
-export default HomePage
+export default App
