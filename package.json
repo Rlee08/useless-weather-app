@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "rita": "^3.1.3"
+    "@tailwindcss/postcss": "^4.0.2",
+    "postcss": "^8.5.1",
+    "rita": "^3.1.3",
+    "tailwindcss": "^4.0.2"
   }
 }
