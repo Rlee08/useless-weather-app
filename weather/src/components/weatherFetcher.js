@@ -1,6 +1,7 @@
 let { RiTa } = require('rita');
 
 export const getUserLocation = () => {
+  console.log('getting location');
     return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -13,11 +14,11 @@ export const getUserLocation = () => {
             (error) => {
               console.error("Error getting location:", error);
               // Fallback to a default location if geolocation fails
-              reject({lat: 42.369898, lon: -74.868172});
+              reject();
             }
           );
         } else {
-            reject({lat: 42.369898, lon: -74.868172});
+            reject();
           }
       });
     };

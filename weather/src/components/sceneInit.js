@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 export default class SceneInit {
   constructor(canvasId) {
@@ -18,8 +19,8 @@ export default class SceneInit {
     this.controls = undefined;
 
     // NOTE: Lighting is basically required.
-    this.ambientLight = undefined;
-    this.directionalLight = undefined;
+    // this.ambientLight = undefined;
+    // this.directionalLight = undefined;
   }
 
   initialize() {
@@ -41,28 +42,47 @@ export default class SceneInit {
     });
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    // this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.enabled = true;
     document.body.appendChild(this.renderer.domElement);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    // ambient light which is for the whole scene
-    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    this.ambientLight.castShadow = true;
-    this.scene.add(this.ambientLight);
+    // // ambient light which is for the whole scene
+    // this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // this.ambientLight.castShadow = true;
+    // this.scene.add(this.ambientLight);
 
-    // directional light - parallel sun rays
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    // this.directionalLight.castShadow = true;
-    this.directionalLight.position.set(0, 32, 64);
-    this.scene.add(this.directionalLight);
+    // // directional light - parallel sun rays
+    // this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    // // this.directionalLight.castShadow = true;
+    // this.directionalLight.position.set(0, 32, 64);
+    // this.scene.add(this.directionalLight);
 
     // if window resizes
     window.addEventListener('resize', () => this.onWindowResize(), false);
 
+    // new RGBELoader()
+    // .load('/images/sky.hdr', function (texture){
+    //   texture.mapping = THREE.EquirectangularReflectionMapping;
+    //   this.scene.background = texture;
+    //   this.scene.environment = texture;
+    // });
+
     // NOTE: Load space background.
-    // this.loader = new THREE.TextureLoader();
-    // this.scene.background = this.loader.load('./pics/space.jpeg');
+    this.loader = new THREE.TextureLoader();
+    const texture = this.loader.load('/images/sky2.jpg');
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    this.scene.background = texture;
+
+
+    // const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
+
+    // const hdriLoader = new RGBELoader()
+    // hdriLoader.load( '/images/sky.hdr', function ( texture ) {
+    //   const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
+    //   texture.dispose(); 
+    //   this.scene.environment = envMap
+    // } );
 
     // NOTE: Declare uniforms to pass into glsl shaders.
     // this.uniforms = {
